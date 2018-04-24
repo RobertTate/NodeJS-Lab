@@ -13,11 +13,10 @@ rp("https://reddit.com/r/popular.json")
         let resultParsed = JSON.parse(result);
 
         let downloader = resultParsed.data.children.map((article) => {
-            if (path.extname(article.data.url) === '.jpg' || path.extname(article.data.url) === '.png' || path.extname(article.data.url) === '.gifv' ) {
+            let ext = path.extname(article.data.url);
+            if (ext === '.jpg' || ext === '.png' || ext === '.gifv' ) {
                 
-                fs.writeFile((`${downloadPath}/${article.data.title}`), article.data.url, err => {
-                    if (err) console.log(err);  
-                }) 
+                rp(article.data.url).pipe(fs.createWriteStream(`${downloadPath}/${article.data.id}${ext}`));
             }
             
         })
